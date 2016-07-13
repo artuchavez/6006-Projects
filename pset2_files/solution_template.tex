@@ -1,0 +1,231 @@
+%
+% 6.006 problem set 2 solutions template
+%
+\documentclass[12pt,twoside]{article}
+
+\usepackage{amsmath}
+\usepackage{color}
+
+\input{macros}
+
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\textwidth}{6.5in}
+\setlength{\topmargin}{0in}
+\setlength{\textheight}{8.5in}
+
+\newcommand{\theproblemsetnum}{2}
+\newcommand{\releasedate}{Thursday, September 17}
+\newcommand{\partaduedate}{March 3rd, 2016}
+\newcommand{\tabUnit}{3ex}
+\newcommand{\tabT}{\hspace*{\tabUnit}}
+
+\title{6.006 PSET 2}
+
+\begin{document}
+
+\handout{Problem Set \theproblemsetnum}{DATE}
+
+\textbf{All parts are due {\bf \partaduedate} at {\bf 11:59PM}}.
+
+\setlength{\parindent}{0pt}
+
+\medskip
+
+\hrulefill
+
+\medskip
+
+{\bf Name:} Your Name
+
+\medskip
+
+{\bf Collaborators:} Name1, Name2 
+
+\medskip
+
+\hrulefill
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% See below for common and useful latex constructs. %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Some useful commands:
+%$f(x) = \Theta(x)$
+%$T(x, y) \leq \log(x) + 2^y + \binom{2n}{n}$
+% {\tt code\_function}
+
+
+% You can create unnumbered lists as follows:
+%\begin{itemize}
+%    \item First item in a list 
+%        \begin{itemize}
+%            \item First item in a list 
+%                \begin{itemize}
+%                    \item First item in a list 
+%                    \item Second item in a list 
+%                \end{itemize}
+%            \item Second item in a list 
+%        \end{itemize}
+%    \item Second item in a list 
+%\end{itemize}
+
+% You can create numbered lists as follows:
+%\begin{enumerate}
+%    \item First item in a list 
+%    \item Second item in a list 
+%    \item Third item in a list
+%\end{enumerate}
+
+% You can write aligned equations as follows:
+%\begin{align} 
+%    \begin{split}
+%        (x+y)^3 &= (x+y)^2(x+y) \\
+%                &= (x^2+2xy+y^2)(x+y) \\
+%                &= (x^3+2x^2y+xy^2) + (x^2y+2xy^2+y^3) \\
+%                &= x^3+3x^2y+3xy^2+y^3
+%    \end{split}                                 
+%\end{align}
+
+% You can create grids/matrices as follows:
+%\begin{align}
+%    A = 
+%    \begin{bmatrix}
+%        A_{11} & A_{21} \\
+%        A_{21} & A_{22}
+%    \end{bmatrix}
+%\end{align}
+
+\begin{problems}
+
+\section*{Part A}
+
+\problem  % Problem 1
+
+\begin{problemparts}
+\problempart  % Problem 1a)
+\problempart  % Problem 1b)
+\problempart  % Problem 1c)
+\problempart  % Problem 1d)
+\problempart  % Problem 1e)
+\end{problemparts}
+
+\problem  % Problem 2
+
+\begin{problemparts}
+
+\problempart % Problem 1a)
+ 
+ \vspace{2mm}
+ 
+ Explanation: In order to compute the augmented merge, we basically have to do the normal merge operation we studied in class (we compare the first elements of each list, add the smallest to the result list and keep doing comparing the first not yet added until we reach the end of both lists). The difference is that now we add a counter to know the number of inversions. For this counter to work we use a support variable initialized to the length of the of the first list. Then, we decrease the variable by one unit every time the element from the first list is appended to the list (no inversions are made). Then, we increase the variable every time something from the second list is appended (as an inversion is made) and add the value of the variable to the counter. When we go through the whole list, we just see if the counter is even or odd and then return the final merged list B and the parity bit b.
+ 
+\vspace{2mm}
+
+ Pseudocode:
+ 
+ \begin{verbatim}
+Aumented Merge(A_1, A_2):
+
+   k = |A_1|
+   count = 0, i = 0, j = 0
+   while i < |A_1| or j < |A_2|:
+      if A_1[i] < A_2[j]:
+         B.append(A_1[I])
+         i++
+         k--
+      else:
+         B.append(A_2[j])
+         j++
+         count += k
+   b = count%2
+   return B, b	
+\end{verbatim}
+
+\vspace{2mm}
+
+
+\problempart% Problem 1b)
+
+\vspace{2mm}
+
+The running time is $O(max (n_1, n_2))$, due to the while loop, that happens the max between $n_1$ and $n_2$ times (as we increment i and j by 1 everytime we go through the loop till we reach the end of both lists). 
+
+\vspace{2mm}
+
+\problempart% Problem 1c)
+
+\vspace{2mm}
+
+Explanation: This is basically the same as the MergeSort algorithm that we studied in class. The only difference is that now we have to keep track of the parity of each part of the recursive problem and take the mod of the total parity (that we find in the end).
+
+\vspace{2mm}
+
+Pseudocode:
+
+ \begin{verbatim}
+Aumented MergeSort(A):
+
+left = A[1, ..., len(A)/2]
+right = A[len(A)/2 +1, ..., len(A)]
+
+#CHECK BASE CASE ON THE BOOK
+if len(left) = 1 or len(right) = 1:
+           return B, b
+
+(sorted_left, parity_left) = Augmented MergeSort(left)
+(sorted_right, parity_right) = Augmented MergeSort(right)
+
+(B, parity_all) = Augmented Merge(left, right)
+
+b = (parity_left + parity_right + parity_all) %2
+
+return B, b
+
+\end{verbatim}
+
+\vspace{2mm}
+
+\problempart% Problem 1d)
+
+\vspace{2mm}
+
+To analyse the running time of this algorithm we use the recursion analysis techniques we learned in class. Everytime we divide the problem by 2 and each problem has half of the original problem size. What we do outside of the recursion is the augmented merge sort, which we analysed to be $O(max (n_1, n_2))$. In this case $n_1$ and $n_2$ are $(\frac{n}{2})$, so we have a recursion function:
+
+\vspace{2mm}
+
+$$T(n) = 2T(\frac{n}{2}) + O(n)$$
+
+\vspace{2mm}
+
+By Master Theorem we know this is $ O(nlogn)$
+
+\vspace{2mm}
+
+\end{problemparts}
+
+
+\problem  % Problem 3
+\begin{problemparts}
+\problempart
+\problempart
+\problempart
+\problempart
+\end{problemparts}
+
+\section*{Part B}
+\problem  % Problem 4
+\begin{problemparts}
+\emph{Submit your implemented python script.}
+\problempart
+\problempart
+\problempart
+\problempart
+\problempart
+\end{problemparts}
+\end{problems}
+
+
+
+\end{document}
+
